@@ -13,14 +13,19 @@ BAMBU_KEY = os.environ.get("BAMBU_KEY")
 # ---- Cleaner Function ----
 def clean_response(obj):
     if isinstance(obj, dict):
+        # Top level aur nested dono jagah se remove karega
         obj.pop("Owner", None)
+        obj.pop("OWNER", None)   # 👈 Yeh add karo
         obj.pop("BUY_API", None)
         obj.pop("SUPPORT", None)
-        for key in obj:
+
+        for key in list(obj.keys()):
             clean_response(obj[key])
+
     elif isinstance(obj, list):
         for item in obj:
             clean_response(item)
+
     return obj
 
 
