@@ -1,8 +1,8 @@
 from flask import Flask, request, jsonify
-import requests
-import os
+import requests, os
 
 app = Flask(name)
+app.debug = False
 
 PANNEL_KEY = os.environ.get("PANNEL_KEY")
 RC_KEY = os.environ.get("RC_KEY")
@@ -10,10 +10,10 @@ BAMBU_KEY = os.environ.get("BAMBU_KEY")
 
 def safe_json(url, params):
 try:
-r = requests.get(url, params=params, timeout=25)
+r = requests.get(url, params=params, timeout=20)
 return r.json()
 except:
-return {"error":"source api failed"}
+return {"error":"source api down"}
 
 def clean_response(obj):
 if isinstance(obj, dict):
@@ -21,11 +21,11 @@ obj.pop("Owner", None)
 obj.pop("OWNER", None)
 obj.pop("BUY_API", None)
 obj.pop("SUPPORT", None)
-for key in list(obj.keys()):
-clean_response(obj[key])
+for k in list(obj.keys()):
+clean_response(obj[k])
 elif isinstance(obj, list):
-for item in obj:
-clean_response(item)
+for i in obj:
+clean_response(i)
 return obj
 
 @app.route("/")
@@ -60,4 +60,4 @@ data = safe_json("https://Usesir.vercel.app/api/bambu",
 {"key":BAMBU_KEY,"num":num})
 return jsonify(clean_response(data))
 
-handler = app
+app = app
