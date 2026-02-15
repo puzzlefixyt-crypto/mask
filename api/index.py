@@ -1,8 +1,8 @@
 from flask import Flask, request, jsonify
 import requests, os
+from werkzeug.wrappers import Response
 
 app = Flask(name)
-app.debug = False
 
 PANNEL_KEY = os.environ.get("PANNEL_KEY")
 RC_KEY = os.environ.get("RC_KEY")
@@ -60,4 +60,5 @@ data = safe_json("https://Usesir.vercel.app/api/bambu",
 {"key":BAMBU_KEY,"num":num})
 return jsonify(clean_response(data))
 
-app = app
+def handler(request):
+return Response.from_app(app, request.environ)
