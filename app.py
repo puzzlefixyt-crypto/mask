@@ -98,6 +98,14 @@ def bambu_api():
     data = clean_response(r.json())
     return jsonify(data)
 
+# ---- Wakeup / Health Route ----
+@app.route("/")
+def home():
+    return "API RUNNING", 200
+
+@app.route("/ping")
+def ping():
+    return "OK", 200
 
 if __name__ == "__main__":
     app.run()
