@@ -8,6 +8,13 @@ PANNEL_KEY = os.environ.get("PANNEL_KEY")
 RC_KEY = os.environ.get("RC_KEY")
 BAMBU_KEY = os.environ.get("BAMBU_KEY")
 
+def safe_json(url, params):
+try:
+r = requests.get(url, params=params, timeout=25)
+return r.json()
+except:
+return {"error":"source api failed"}
+
 def clean_response(obj):
 if isinstance(obj, dict):
 obj.pop("Owner", None)
@@ -25,36 +32,32 @@ return obj
 def home():
 return "API RUNNING"
 
-number
-
 @app.route("/num")
 def num_api():
 number = request.args.get("number")
-params = {"action":"api","key":PANNEL_KEY,"number":number}
-r = requests.get("https://api.paanel.shop/numapi.php", params=params)
-return jsonify(clean_response(r.json()))
-
-aadhar → adh?adh=
+data = safe_json("https://api.paanel.shop/numapi.php",
+{"action":"api","key":PANNEL_KEY,"number":number})
+return jsonify(clean_response(data))
 
 @app.route("/adh")
 def adh_api():
 adh = request.args.get("adh")
-params = {"action":"api","key":PANNEL_KEY,"aadhar":adh}
-r = requests.get("https://api.paanel.shop/numapi.php", params=params)
-return jsonify(clean_response(r.json()))
+data = safe_json("https://api.paanel.shop/numapi.php",
+{"action":"api","key":PANNEL_KEY,"aadhar":adh})
+return jsonify(clean_response(data))
 
 @app.route("/rc")
 def rc_api():
 rc = request.args.get("rc")
-params = {"key":RC_KEY,"rc":rc}
-r = requests.get("https://usesirosint.vercel.app/api/rcnum", params=params)
-return jsonify(clean_response(r.json()))
+data = safe_json("https://usesirosint.vercel.app/api/rcnum",
+{"key":RC_KEY,"rc":rc})
+return jsonify(clean_response(data))
 
 @app.route("/bambu")
 def bambu_api():
 num = request.args.get("number")
-params = {"key":BAMBU_KEY,"num":num}
-r = requests.get("https://Usesir.vercel.app/api/bambu", params=params)
-return jsonify(clean_response(r.json()))
+data = safe_json("https://Usesir.vercel.app/api/bambu",
+{"key":BAMBU_KEY,"num":num})
+return jsonify(clean_response(data))
 
 handler = app
