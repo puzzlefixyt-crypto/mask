@@ -13,7 +13,7 @@ try:
 r = requests.get(url, params=params, timeout=20)
 return r.json()
 except:
-return {"error":"source api down"}
+return {"error": "source api down"}
 
 def clean_response(obj):
 if isinstance(obj, dict):
